@@ -12,14 +12,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
 
 db = SQLAlchemy(app)
-with app.app_context():
-    db.create_all()
+
 
 # --- Database Models ---
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.String(50), unique=True, nullable=False)
+ 
+ with app.app_context():
+    db.create_all()
+
     full_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     department = db.Column(db.String(100), nullable=True)
