@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('materials') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Back to Inventory</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0">{{ material.name }}</h3>
+                    <span class="badge bg-primary fs-6">{{ material.material_id }}</span>
+                </div>
+                
+                <hr>
+
+                <div class="row g-3">
+                    <div class="col-md-6"><strong>Category:</strong> {{ material.category.name }}</div>
+                    <div class="col-md-6"><strong>Status:</strong> <span class="badge bg-info text-dark">{{ material.status }}</span></div>
+                    <div class="col-md-6"><strong>Manufacturer:</strong> {{ material.manufacturer or 'N/A' }}</div>
+                    <div class="col-md-6"><strong>Model Number:</strong> {{ material.model_number or 'N/A' }}</div>
+                    <div class="col-md-6"><strong>Permanent Owner:</strong> {{ material.owner.name }}</div>
+                    <div class="col-md-6"><strong>Department:</strong> {{ material.department }}</div>
+                    <div class="col-md-12"><strong>Location Hierarchy:</strong> {{ material.building or '' }} > Floor {{ material.floor or '' }} > Room {{ material.room or '' }} > Cupboard {{ material.cupboard or '' }}</div>
+                    <div class="col-md-12"><strong>Specifications:</strong> <p class="text-muted">{{ material.technical_specifications or 'No technical specifications added.' }}</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Audit & Item History</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for h in history %}
+                    <li class="list-group-item">
+                        <strong>{{ h.action }}</strong> - {{ h.new_value }}
+                        <div class="small text-muted">By {{ h.performed_by.name }} on {{ h.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        {% if material.status == 'AVAILABLE' %}
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white fw-bold">Borrow This Material</div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('borrow_material', id=material.id) }}">
+                    <div class="mb-3">
+                        <label class="form-label">Expected Return Date</label>
+                        <input type="date" name="expected_return_date" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Purpose of Borrowing</label>
+                        <textarea name="purpose" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Submit Borrow Request</button>
+                </form>
+            </div>
+        </div>
+        {% elif material.status == 'BORROWED' and active_borrow %}
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-warning text-dark fw-bold">Currently Borrowed</div>
+            <div class="card-body">
+                <p><strong>Borrower:</strong> {{ active_borrow.borrower.name }}</p>
+                <p><strong>Borrowed On:</strong> {{ active_borrow.borrow_date.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Expected Return:</strong> {{ active_borrow.expected_return_date.strftime('%Y-%m-%d') }}</p>
+                
+                <hr>
+
+                <form method="POST" action="{{ url_for('return_material', id=material.id) }}">
+                    <div class="mb-3">
+                        <label class="form-label">Return Condition</label>
+                        <select name="condition" class="form-select">
+                            <option value="Good">Good / Working</option>
+                            <option value="Damaged">Damaged</option>
+                            <option value="Maintenance Needed">Needs Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Return Remarks</label>
+                        <textarea name="remarks" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Process Return</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

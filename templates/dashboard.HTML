@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Dashboard Overview</h2>
+    <a href="{{ url_for('add_material') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add New Material</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 bg-primary text-white shadow-sm">
+            <div class="card-body text-center">
+                <h6>Total Materials</h6>
+                <h2 class="display-6 fw-bold">{{ total }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 bg-success text-white shadow-sm">
+            <div class="card-body text-center">
+                <h6>Available</h6>
+                <h2 class="display-6 fw-bold">{{ available }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 bg-warning text-dark shadow-sm">
+            <div class="card-body text-center">
+                <h6>Borrowed</h6>
+                <h2 class="display-6 fw-bold">{{ borrowed }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 bg-danger text-white shadow-sm">
+            <div class="card-body text-center">
+                <h6>Overdue</h6>
+                <h2 class="display-6 fw-bold">{{ overdue }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white fw-bold">Recent Activities</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for act in activities %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-secondary me-2">{{ act.action }}</span>
+                            {{ act.new_value or act.old_value }}
+                            <small class="text-muted d-block">By: {{ act.performed_by.name }}</small>
+                        </div>
+                        <small class="text-muted">{{ act.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-muted text-center py-3">No recent activities found.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Recently Added Materials</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for m in recent_materials %}
+                    <li class="list-group-item">
+                        <a href="{{ url_for('material_detail', id=m.id) }}" class="fw-bold text-decoration-none">{{ m.name }}</a>
+                        <small class="d-block text-muted">ID: {{ m.material_id }} | Status: {{ m.status }}</small>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-muted text-center py-3">No materials added yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 800px;">
+    <h2 class="mb-4"><i class="bi bi-gear"></i> System Branding Settings</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <form method="POST" action="{{ url_for('admin_settings') }}" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Site Title Header</label>
+                    <input type="text" name="site_title" class="form-control" value="{{ site_setting.site_title if site_setting else '' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Footer Text</label>
+                    <input type="text" name="footer_text" class="form-control" value="{{ site_setting.footer_text if site_setting else '' }}" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Upload Custom Header Logo</label>
+                    <input type="file" name="logo" class="form-control" accept="image/*">
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100 fw-bold">Save Settings</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

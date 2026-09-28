@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold">Add New Material to Inventory</div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_material') }}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Material Name *</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Category *</label>
+                            <select name="category_id" class="form-select" required>
+                                {% for c in categories %}
+                                <option value="{{ c.id }}">{{ c.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Manufacturer</label>
+                            <input type="text" name="manufacturer" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Model Number</label>
+                            <input type="text" name="model_number" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Department *</label>
+                            <input type="text" name="department" class="form-control" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Building</label>
+                            <input type="text" name="building" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Floor</label>
+                            <input type="text" name="floor" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Room / Lab</label>
+                            <input type="text" name="room" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Cupboard / Shelf</label>
+                            <input type="text" name="cupboard" class="form-control">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Technical Specifications</label>
+                            <textarea name="technical_specifications" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-end">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Save Material</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
